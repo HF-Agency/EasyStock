@@ -1,5 +1,4 @@
-﻿<Router AppAssembly="@typeof(Program).Assembly"
-        AdditionalAssemblies="new[] { typeof(EasyStock.Library.Components.Pages.Home).Assembly }">
+﻿<Router AppAssembly="@typeof(MauiProgram).Assembly">    
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />

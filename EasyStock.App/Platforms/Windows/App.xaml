@@ -1,0 +1,8 @@
+﻿<maui:MauiWinUIApplication
+    x:Class="EasyStock.App.WinUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:maui="using:Microsoft.Maui"
+    xmlns:local="using:EasyStock.App.WinUI">
+
+</maui:MauiWinUIApplication>

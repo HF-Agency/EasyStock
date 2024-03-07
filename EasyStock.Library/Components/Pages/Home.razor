@@ -1,0 +1,46 @@
+﻿@page "/"
+@inherits LayoutComponentBase
+
+@using EasyStock.Library.Entities
+@using EasyStock.Library.Services.Clients
+
+<h1>Products</h1>
+
+<button @onclick="LoadData">Get Products</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Bar Code</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in _products)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Name</td>
+                <td>@product.Quantity</td>
+                <td>@product.Price</td>
+                <td>@product.BarCode</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code{
+    [Inject]
+    private ProductClient ProductClient { get; set; }
+
+    private List<Product> _products = new List<Product>();
+
+    private async Task LoadData()
+    {
+       _products = await ProductClient.GetProducts();
+    }
+}

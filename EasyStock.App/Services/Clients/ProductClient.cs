@@ -12,9 +12,9 @@ namespace EasyStock.Library.Services.Clients
             _httpClient = httpClient;
         }
 
-        public async Task<List<Product>> GetProducts()
+        public async Task<IEnumerable<Product?>?> GetProducts()
         {
-            return await _httpClient.GetFromJsonAsync<List<Product>>("api/product");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<Product>>("api/product");
         }
     }
 }

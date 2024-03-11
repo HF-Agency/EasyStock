@@ -1,5 +1,6 @@
 ﻿using EasyStock.Library.Services.Clients;
 using Microsoft.Extensions.Logging;
+using Radzen;
 
 namespace EasyStock.App
 {
@@ -16,6 +17,9 @@ namespace EasyStock.App
                 });
 
             builder.Services.AddMauiBlazorWebView();
+
+            // Adding Services
+            builder.Services.AddRadzenComponents();
 
             // Register HttpClient
             builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7260") });

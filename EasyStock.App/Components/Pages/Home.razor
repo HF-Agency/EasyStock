@@ -8,36 +8,26 @@
 
 <button @onclick="LoadData">Get Products</button>
 
-<table>
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Bar Code</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in _products)
-        {
-            <tr>
-                <td>@product.Id</td>
-                <td>@product.Name</td>
-                <td>@product.Quantity</td>
-                <td>@product.Price</td>
-                <td>@product.BarCode</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<RadzenDataGrid 
+    AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" 
+    AllowSorting="true" PageSize="15" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+    ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single"
+    Data="@_products">
+    <Columns>
+        <RadzenDataGridColumn TItem="Product" Property="Id" Title="Id" Width="50px" />
+        <RadzenDataGridColumn TItem="Product" Property="Name" Title="Name" />
+        <RadzenDataGridColumn TItem="Product" Property="Quantity" Title="Quantity" />
+        <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price" />
+        <RadzenDataGridColumn TItem="Product" Property="BarCode" Title="Bar Code" />
+    </Columns>
+</RadzenDataGrid>
 
 
 @code{
     [Inject]
     private ProductClient ProductClient { get; set; }
 
-    private List<Product> _products = new List<Product>();
+    private IEnumerable<Product> _products = new List<Product>();
 
     private async Task LoadData()
     {

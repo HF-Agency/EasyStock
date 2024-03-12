@@ -1,7 +1,7 @@
 ﻿using EasyStock.Library.Entities;
 using System.Net.Http.Json;
 
-namespace EasyStock.Library.Services.Clients
+namespace EasyStock.App.Services.Clients
 {
     public class ProductClient
     {
@@ -16,5 +16,19 @@ namespace EasyStock.Library.Services.Clients
         {
             return await _httpClient.GetFromJsonAsync<IEnumerable<Product>>("api/product");
         }
+
+
+        public async Task<Product> GetProductByIdAsync(int productId)
+        {
+            
+             // Faça uma solicitação HTTP GET para obter os dados do produto
+             var product = await _httpClient.GetFromJsonAsync<Product>($"api/product/{productId}");
+
+             return product;
+           
+        }
+
+ 
     }
 }
+

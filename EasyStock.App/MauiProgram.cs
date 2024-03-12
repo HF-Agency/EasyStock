@@ -1,4 +1,4 @@
-﻿using EasyStock.Library.Services.Clients;
+﻿using EasyStock.App.Services.Clients;
 using Microsoft.Extensions.Logging;
 using Radzen;
 

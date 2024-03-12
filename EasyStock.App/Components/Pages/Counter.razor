@@ -1,18 +1,38 @@
 ﻿@page "/counter" 
+@inject ProductClient ProductClient
 
-<PageTitle>Counter</PageTitle>
+<h1>Get</h1>
 
-<h1>Counter</h1>
+<input type="text" @bind="_id" />
+<button @onclick="GetProductById"></button> 
 
-<p role="status">Current count: @currentCount</p>
+@if (_product != null)
+{
+    <RadzenDataGrid Data="@_products">
+        <Columns>
+            <RadzenDataGridColumn Title="id" TItem="Product" Property="@nameof(Product.Id)"></RadzenDataGridColumn>
+            <RadzenDataGridColumn Title="Name" TItem="Product" Property="@nameof(Product.Name)"></RadzenDataGridColumn>
+            <RadzenDataGridColumn Title="Quantity" TItem="Product" Property="@nameof(Product.Quantity)"></RadzenDataGridColumn>
+            <RadzenDataGridColumn Title="Price" TItem="Product" Property="@nameof(Product.Price)"></RadzenDataGridColumn>
+            <RadzenDataGridColumn Title="Bar Code" TItem="Product" Property="@nameof(Product.BarCode)"></RadzenDataGridColumn>
+          
+        </Columns>
+    </RadzenDataGrid>
+}
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+@code{
+    private int _id;
+    private Product _product;
+    private List<Product> _products = new();
 
-@code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    private async Task GetProductById()
     {
-        currentCount++;
+        if (_id != null)
+        {
+            _product = await ProductClient.GetProductByIdAsync(_id);
+            if (_product != null)
+                _products.Add(_product);
+        }
     }
+
 }

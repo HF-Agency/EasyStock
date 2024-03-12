@@ -1,4 +1,5 @@
 using EasyStock.API.EntityFramework;
+using EasyStock.Library.Entities;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);

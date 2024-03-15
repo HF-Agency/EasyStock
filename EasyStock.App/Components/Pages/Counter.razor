@@ -1,38 +1,39 @@
-﻿@page "/counter" 
+﻿@page "/product-details" 
 @inject ProductClient ProductClient
 
-<h1>Get</h1>
+<h1>Get Product Details</h1>
 
-<input type="text" @bind="_id" />
-<button @onclick="GetProductById"></button> 
+<input type="number" @bind-value="id" />
+<button @onclick="GetProductById">Get Product Details</button> 
 
-@if (_product != null)
+@if (product != null)
 {
-    <RadzenDataGrid Data="@_products">
-        <Columns>
-            <RadzenDataGridColumn Title="id" TItem="Product" Property="@nameof(Product.Id)"></RadzenDataGridColumn>
-            <RadzenDataGridColumn Title="Name" TItem="Product" Property="@nameof(Product.Name)"></RadzenDataGridColumn>
-            <RadzenDataGridColumn Title="Quantity" TItem="Product" Property="@nameof(Product.Quantity)"></RadzenDataGridColumn>
-            <RadzenDataGridColumn Title="Price" TItem="Product" Property="@nameof(Product.Price)"></RadzenDataGridColumn>
-            <RadzenDataGridColumn Title="Bar Code" TItem="Product" Property="@nameof(Product.BarCode)"></RadzenDataGridColumn>
-          
-        </Columns>
-    </RadzenDataGrid>
+    <div class="product-details">
+        <div class="detail"><strong>ID:</strong> @product.Id</div>
+        <div class="detail"><strong>Name:</strong> @product.Name</div>
+        <div class="detail"><strong>Quantity:</strong> @product.Quantity</div>
+        <div class="detail"><strong>Price:</strong> @product.Price.ToString("C")</div>
+        <div class="detail"><strong>Bar Code:</strong> @product.BarCode</div>
+    </div>
+}
+else
+{
+    <p>Please enter a product ID to display its details.</p>
 }
 
+
+
 @code{
-    private int _id;
-    private Product _product;
-    private List<Product> _products = new();
+    private int id;
+    private Product product;
 
     private async Task GetProductById()
     {
-        if (_id != null)
+        if (id != null)
         {
-            _product = await ProductClient.GetProductByIdAsync(_id);
-            if (_product != null)
-                _products.Add(_product);
+            product = await ProductClient.GetProductByIdAsync(id);
         }
+
     }
 
 }

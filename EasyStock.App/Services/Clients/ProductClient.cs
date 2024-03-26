@@ -21,7 +21,7 @@ namespace EasyStock.App.Services.Clients
             try
             {
                 _logger.LogInformation("Fetching all products");
-                var products = await _httpClient.GetFromJsonAsync<IEnumerable<Product>>("api/product");
+                var products = await _httpClient.GetFromJsonAsync<IEnumerable<Product>>("/product");
                 _logger.LogInformation("Successfully fetched all products");
                 return products;
             }
@@ -42,7 +42,7 @@ namespace EasyStock.App.Services.Clients
             try
             {
                 _logger.LogInformation($"Fetching product details for ID: {productId}");
-                var product = await _httpClient.GetFromJsonAsync<Product>($"api/product/{productId}");
+                var product = await _httpClient.GetFromJsonAsync<Product>($"/product/{productId}");
                 if (product != null)
                 {
                     _logger.LogInformation($"Successfully fetched product details for ID: {productId}");

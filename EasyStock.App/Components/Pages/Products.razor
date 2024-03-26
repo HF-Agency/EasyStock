@@ -1,16 +1,13 @@
-﻿@page "/"
-@inherits LayoutComponentBase
-
+@page "/products"
 
 <h1>Products</h1>
 
 <button @onclick="LoadData">Get Products</button>
 
-<RadzenDataGrid 
-    AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" 
-    AllowSorting="true" PageSize="15" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-    ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single"
-    Data="@_products">
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
+                AllowSorting="true" PageSize="15" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single"
+                Data="@_products">
     <Columns>
         <RadzenDataGridColumn TItem="Product" Property="Id" Title="Id" Width="50px" />
         <RadzenDataGridColumn TItem="Product" Property="Name" Title="Name" />
@@ -21,7 +18,7 @@
 </RadzenDataGrid>
 
 
-@code{
+@code {
     [Inject]
     private ProductClient ProductClient { get; set; }
 

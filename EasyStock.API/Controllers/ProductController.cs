@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EasyStock.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ProductController : Controller
     {
         private readonly EasyStockContext _context;

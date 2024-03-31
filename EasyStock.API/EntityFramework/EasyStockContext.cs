@@ -1,23 +1,20 @@
 ﻿using EasyStock.Library.Entities;
+using EasyStock.Library.Entities.Authentication;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 
 namespace EasyStock.API.EntityFramework
 {
-    public class EasyStockContext : DbContext
+    public class EasyStockContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
-        private readonly IConfiguration config;
-
-        public EasyStockContext(IConfiguration config)
+        public EasyStockContext(DbContextOptions<EasyStockContext> options)
+            :base(options)
         {
-            this.config = config;
+
         }
 
         public DbSet<Product> Products { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(config["ConnectionString"]);
-        }
+        public DbSet<Company> Companies { get; set; }
     }
 }

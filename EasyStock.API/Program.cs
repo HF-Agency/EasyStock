@@ -23,7 +23,17 @@ builder.Services.AddDbContext<EasyStockContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EasyStockDb")));
 
 // Configure Identity Services
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => {
+    options.User.RequireUniqueEmail = true;
+
+    // Password settings.
+    options.Password.RequireDigit = true; // Requires a number between 0-9 in the password.
+    options.Password.RequireLowercase = true; // Requires a lowercase character in the password.
+    options.Password.RequireNonAlphanumeric = true; // Requires a non-alphanumeric character in the password.
+    options.Password.RequireUppercase = true; // Requires an uppercase character in the password.
+    options.Password.RequiredLength = 6; // Sets the minimum length of the password.
+    options.Password.RequiredUniqueChars = 1; // Requires a number of unique characters in the password.
+})
     .AddEntityFrameworkStores<EasyStockContext>()
     .AddDefaultTokenProviders();
 
@@ -32,12 +42,22 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true; // Makes the cookie inaccessible to JavaScript
     options.ExpireTimeSpan = TimeSpan.FromDays(5); // Sets the cookie expiration time
-    options.LoginPath = "/Auth/Login"; // Specifies the path for the login page
-    options.LogoutPath = "/Auth/Logout"; // Specifies the path for the logout action
     options.SlidingExpiration = true; // Resets the expiration time after half the time has passed
                                       // Recommended to use secure cookies in production
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.None; // Adjust based on your cross-site requirements
+
+    // Handle unauthorized and unauthenticated scenarios without redirection
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.StatusCode = 403;
+        return Task.CompletedTask;
+    };
 });
 
 var app = builder.Build();

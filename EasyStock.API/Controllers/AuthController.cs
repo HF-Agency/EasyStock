@@ -3,6 +3,7 @@ using EasyStock.Library.Entities.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace EasyStock.API.Controllers
 {
@@ -26,12 +27,7 @@ namespace EasyStock.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var company = await _context.Companies.FindAsync(model.CompanyId);
-            if (company == null)
-            {
-                return NotFound(new { Status = "Error", Message = "Company not found." });
-            }
-
+            // Check if the user already exists to prevent duplicate entries
             var userExists = await _userManager.FindByEmailAsync(model.Email);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User already exists!" });
@@ -40,24 +36,46 @@ namespace EasyStock.API.Controllers
             {
                 Email = model.Email,
                 UserName = model.Email,
-                CompanyId = model.CompanyId
+                FirstName = model.FirstName, 
+                LastName = model.LastName
             };
 
+            // Only attempt to assign a company if a CompanyId is provided
+            if (model.CompanyId.HasValue)
+            {
+                var company = await _context.Companies.FindAsync(model.CompanyId.Value);
+                if (company == null)
+                {
+                    return NotFound(new { Status = "Error", Message = "Company not found." });
+                }
+                // Assign the CompanyId since we now know it's valid
+                user.CompanyId = model.CompanyId.Value;
+            }
+
+            // Proceed to create the user
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
-            // If roles are being used, add user to roles
-            if (!await _roleManager.RoleExistsAsync(model.Role))
-                await _roleManager.CreateAsync(new ApplicationRole() { Name = model.Role });
-
-            if (await _roleManager.RoleExistsAsync(model.Role))
             {
-                await _userManager.AddToRoleAsync(user, model.Role);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            }
+
+            // Add user to roles if specified
+            if (!string.IsNullOrWhiteSpace(model.Role))
+            {
+                if (!await _roleManager.RoleExistsAsync(model.Role))
+                {
+                    await _roleManager.CreateAsync(new ApplicationRole() { Name = model.Role });
+                }
+
+                if (await _roleManager.RoleExistsAsync(model.Role))
+                {
+                    await _userManager.AddToRoleAsync(user, model.Role);
+                }
             }
 
             return Ok(new { Status = "Success", Message = "User created successfully!" });
         }
+
 
 
         [HttpPost("login")]

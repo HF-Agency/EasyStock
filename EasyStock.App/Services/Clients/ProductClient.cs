@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using System;
 using EasyStock.Library.Entities.Interface;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace EasyStock.App.Services.Clients
 {

@@ -1,3 +1,18 @@
 @page "/"
+@using EasyStock.App.Services.Interfaces
+@using EasyStock.Library.Entities.Authentication
+@inject IAuthClient AuthClient
 
 <h1>Dashboard</h1>
+<input type="text" @bind-value="model.Email"/>
+<input type="text" @bind-value="model.Password"/>
+<button @onclick="Submit">Submit</button>
+
+
+@code{
+    private LoginModel model = new LoginModel();
+
+    private void Submit(){
+        AuthClient.LoginUserAsync(model);
+    }
+}

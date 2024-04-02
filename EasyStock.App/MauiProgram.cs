@@ -1,4 +1,5 @@
 ﻿using EasyStock.App.Services.Clients;
+using EasyStock.App.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
@@ -29,6 +30,7 @@ namespace EasyStock.App
             // Register Services
             builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7260") });
             builder.Services.AddSingleton<ProductClient>();
+            builder.Services.AddSingleton<IAuthClient, AuthClient>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

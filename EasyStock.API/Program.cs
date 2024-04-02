@@ -1,8 +1,11 @@
 using EasyStock.API.EntityFramework;
 using EasyStock.API.Services;
 using EasyStock.Library.Entities.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,28 +35,24 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => {
     .AddEntityFrameworkStores<EasyStockContext>()
     .AddDefaultTokenProviders();
 
-// Configure Cookies Authentication
-builder.Services.ConfigureApplicationCookie(options =>
+// Add JWT Authentication
+builder.Services.AddAuthentication(options =>
 {
-    options.ExpireTimeSpan = TimeSpan.FromDays(5); // Sets the cookie expiration time
-    options.SlidingExpiration = true; // Resets the expiration time after half the time has passed
-                                      // Recommended to use secure cookies in production
-    options.Cookie.HttpOnly = true; // Makes the cookie inaccessible to JavaScript
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.None; // Adjust based on your cross-site requirements
-
-    // Handle unauthorized and unauthenticated scenarios without redirection
-    options.Events.OnRedirectToLogin = context =>
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        context.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    };
-    options.Events.OnRedirectToAccessDenied = context =>
-    {
-        context.Response.StatusCode = 403;
-        return Task.CompletedTask;
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"]
     };
 });
+
 
 var app = builder.Build();
 

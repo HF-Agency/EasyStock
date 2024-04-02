@@ -2,8 +2,10 @@
 using EasyStock.Library.Entities.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace EasyStock.API.Controllers
 {
@@ -15,13 +17,15 @@ namespace EasyStock.API.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly EasyStockContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, EasyStockContext context)
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, EasyStockContext context, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -73,7 +77,8 @@ namespace EasyStock.API.Controllers
                 }
             }
 
-            return Ok(new { Status = "Success", Message = "User created successfully!" });
+            var token = await GenerateJwtToken(user);
+            return Ok(new { Status = "Success", Message = "User created successfully!", Token = token });
         }
 
         [HttpPost("login")]
@@ -82,21 +87,43 @@ namespace EasyStock.API.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, isPersistent: false, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    // Assuming here that the cookie is set automatically by ASP.NET Core Identity
-                    return Ok(new { Status = "Success", Message = "Login successful!" });
-                }
+                // Generate JWT token
+                var token = GenerateJwtToken(user);
+
+                return Ok(new { Status = "Success", Message = "Login successful!", Token = token });
             }
             return Unauthorized(new { Status = "Error", Message = "Invalid login attempt." });
         }
 
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        private async Task<string> GenerateJwtToken(ApplicationUser user)
         {
-            await _signInManager.SignOutAsync();
-            return Ok(new { Status = "Success", Message = "Logged out successfully!" });
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("uid", user.Id.ToString())
+            };
+
+            // Retrieve user roles and add them as claims
+            var userRoles = await _userManager.GetRolesAsync(user);
+            foreach (var userRole in userRoles)
+            {
+                claims.Add(new Claim("role", userRole));
+            }
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(2),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }

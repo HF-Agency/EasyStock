@@ -1,13 +1,8 @@
 using EasyStock.API.EntityFramework;
 using EasyStock.API.Services;
-using EasyStock.Library.Entities;
 using EasyStock.Library.Entities.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,10 +35,10 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => {
 // Configure Cookies Authentication
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.Cookie.HttpOnly = true; // Makes the cookie inaccessible to JavaScript
     options.ExpireTimeSpan = TimeSpan.FromDays(5); // Sets the cookie expiration time
     options.SlidingExpiration = true; // Resets the expiration time after half the time has passed
                                       // Recommended to use secure cookies in production
+    options.Cookie.HttpOnly = true; // Makes the cookie inaccessible to JavaScript
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.None; // Adjust based on your cross-site requirements
 

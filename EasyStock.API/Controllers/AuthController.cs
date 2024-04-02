@@ -76,8 +76,6 @@ namespace EasyStock.API.Controllers
             return Ok(new { Status = "Success", Message = "User created successfully!" });
         }
 
-
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {

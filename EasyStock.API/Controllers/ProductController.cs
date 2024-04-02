@@ -1,10 +1,12 @@
 ﻿using EasyStock.API.EntityFramework;
 using EasyStock.Library.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EasyStock.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ProductController : Controller

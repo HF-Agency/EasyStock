@@ -1,18 +1,15 @@
 @page "/"
-@using EasyStock.App.Services.Interfaces
-@using EasyStock.Library.Entities.Authentication
-@inject IAuthClient AuthClient
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AuthClient AuthClient
 
 <h1>Dashboard</h1>
-<input type="text" @bind-value="model.Email"/>
-<input type="text" @bind-value="model.Password"/>
-<button @onclick="Submit">Submit</button>
 
+<button @onclick="LogOut">Log Out</button>
 
 @code{
-    private LoginModel model = new LoginModel();
-
-    private void Submit(){
-        AuthClient.LoginUserAsync(model);
+    private async Task LogOut()
+    {
+        await AuthClient.LogoutUserAsync();
     }
 }

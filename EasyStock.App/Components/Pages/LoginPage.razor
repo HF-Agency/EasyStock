@@ -1,0 +1,29 @@
+@page "/login"
+@using EasyStock.Library.Entities.Authentication
+@inject AuthClient AuthClient
+@inject NavigationManager NavigationManager
+
+<h3>Login</h3>
+<EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+    <InputText id="email" @bind-Value="loginModel.Email" />
+    <InputText id="password" @bind-Value="loginModel.Password" type="password" />
+    <button type="submit">Log in</button>
+</EditForm>
+
+@if (loginFailed)
+{
+    <p class="text-danger">Login failed. Please try again.</p>
+}
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private bool loginFailed = false;
+
+    private async Task HandleLogin()
+    {
+        if(await AuthClient.LoginUserAsync(loginModel))
+            NavigationManager.NavigateTo("/products");
+        else
+            loginFailed = true;
+    }
+}

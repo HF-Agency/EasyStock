@@ -88,7 +88,7 @@ namespace EasyStock.API.Controllers
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 // Generate JWT token
-                var token = GenerateJwtToken(user);
+                var token = await GenerateJwtToken(user);
 
                 return Ok(new { Status = "Success", Message = "Login successful!", Token = token });
             }

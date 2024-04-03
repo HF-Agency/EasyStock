@@ -1,10 +1,70 @@
-.buttons-container{
+.auto-hiding-nav-menu {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    position: relative;
+    transition: max-width 0.3s ease;
+    background-color: #253529;
+    color: #fff;
+    padding-left: 5px;
+    border-radius: 0 0 10px 0;
 }
 
-#dashboard-button{
-    height: 40px;
-    width: 50%;
+.nav-menu {
+    overflow: visible;
+    height: 100%;
+    margin-left: -5px;
+}
+
+.collapsed {
+    width: 50px;
+}
+
+.expand {
+    width: 150px;
+}
+
+
+.nav-item-text {
+    visibility: hidden;
+    position: absolute;
+    margin-left: 0.5rem;
+    font-size: 16px;
+    margin-top: 4px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform-origin: left center;
+}
+
+.expand .nav-item-text {
+    visibility: visible;
+    opacity: 0.5;
+}
+
+.nav-link:hover .nav-item-text {
+    opacity: 1;
+    transform: scale(1.2);
+    color: #DAF7A6;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.nav-item-icon {
+    color: white;
+    font-size: 20px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform-origin: left center;
+    margin-bottom: 10px;
+}
+
+.nav-link:hover .nav-item-icon {
+    color: #DAF7A6;
+    transform: scale(1.2);
+}
+
+.nav-link > * {
+    align-self: flex-start;
 }

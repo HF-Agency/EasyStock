@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyStock.API", "EasyStock.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyStock.Library", "EasyStock.Library\EasyStock.Library.csproj", "{E6B9760D-F9D5-459F-BB24-9F8B74A26F6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyStock.App", "EasyStock.App\EasyStock.App.csproj", "{98B8F870-9270-4A06-8092-8DEE5BD3F617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyStock.App", "EasyStock.App\EasyStock.App.csproj", "{98B8F870-9270-4A06-8092-8DEE5BD3F617}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

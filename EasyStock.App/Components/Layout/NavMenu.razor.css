@@ -4,7 +4,7 @@
     align-items: flex-start;
     position: relative;
     transition: max-width 0.3s ease;
-    background-color: #253529;
+    background-color: #000000;
     color: #fff;
     padding-left: 5px;
     border-radius: 0 0 10px 0;
@@ -26,17 +26,13 @@
 
 
 .nav-item-text {
-    visibility: hidden;
-    position: absolute;
-    margin-left: 0.5rem;
-    font-size: 16px;
-    margin-top: 4px;
+    display: none;
     transition: opacity 0.3s ease, transform 0.3s ease;
     transform-origin: left center;
 }
 
 .expand .nav-item-text {
-    visibility: visible;
+    display: inline;
     opacity: 0.5;
 }
 

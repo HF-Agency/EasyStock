@@ -1,0 +1,30 @@
+﻿@inject NavigationManager NavigationManager
+
+<div class="nav-menu">
+
+    <NavLink class="nav-link" href="" ActiveClass="nav-link-active" Match="NavLinkMatch.All">
+        <i class="bi bi-house"></i>
+        <span>Dashboard</span>
+    </NavLink>
+
+    <NavLink class="nav-link" href="/products" ActiveClass="nav-link-active">
+        <i class="bi bi-house"></i>
+        <span>All Products</span>
+    </NavLink>
+
+    <NavLink class="nav-link" href="/product-details" ActiveClass="nav-link-active">
+        <i class="bi bi-house"></i>
+        <span>Product Details</span>
+    </NavLink>
+
+</div>
+
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private void OnMouseOver()
+    {
+        collapseNavMenu = false;
+    }
+}
